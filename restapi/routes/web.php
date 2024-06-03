@@ -14,10 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/',[EmployeesContoller::class, 'index']);
 
 Route::get('/people/{email}', [EmployeesContoller::class, 'show']);
-
-Route::get('/create', [EmployeesContoller::class, 'create']);
-
 Route::post('/people', [EmployeesContoller::class, 'store']);
+Route::delete('/people/{email}',[EmployeesContoller::class, 'delete']);

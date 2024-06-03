@@ -8,44 +8,43 @@ use Illuminate\Http\Request;
 
 class EmployeesContoller extends Controller
 {
-    public function index(){
-        return view('index',[
-            'employees' => Employee::all()
-        ]);
-    }
+     public function show($email){
 
-    public function show($email){
         try{
             $employee = Employee::findOrFail($email);
             return response()->json($employee);
         }
         catch(ModelNotFoundException $e){
-           return response()->json(['message' => 'No email address found!', 'code' => '400'], 400);
+           return response()->json(['message' => 'No employee found with this email address!', 'code' => '400'], 400);
         }
     }
     
-    public function create(){
-        return view('create');
-    }
-
-    public function store(Request $request){
-        $formfields = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:people',
-            'dept' => 'required',
-            'rank' => 'required',
-            'phone' => 'required|min:4|max:4'
-        ]);
-        $formfields['phone'] = "+36 (1) 666-" . $formfields['phone'];
-
-        try{
+  
+    public function store(Request $request){    
+           try{
+            $formfields = $request->validate([
+                'name' => 'required',
+                'email' => 'required|email|unique:people',
+                'dept' => 'required',
+                'rank' => 'required',
+                'phone' => 'required|regex:/^\+36 \(1\) 666-\d{4}$/'
+            ]);
             Employee::create($formfields);
-            return redirect('/')->with('success', $formfields['name']. " is added to database!");
+           return response()->json(['code' => '200', 'message' => $formfields['name'] ." is added to database!"], 200);
     
         }
         catch(\Exception $e){
-           return response()->json(['code' => '400'], 400);
+              return response()->json(['code' => '400', 'message' => $e->getMessage()], 400);
         }
        
+    }
+
+    public function delete($email){
+            $employee = Employee::find($email);
+            if(is_null($employee)){
+                return response()->json(['message' => 'No employee found with this email address!', 'code' => '400'], 400);
+            }
+            $employee->delete();
+            return response()->json(['code' => '200', 'message' => $employee['name'] ." is deleted from database!"], 200);
     }
 }   
