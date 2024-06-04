@@ -17,4 +17,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/people/{email}', [EmployeesContoller::class, 'show']);
 Route::post('/people', [EmployeesContoller::class, 'store']);
-Route::delete('/people/{email}',[EmployeesContoller::class, 'delete']);
+Route::delete('/people/{email}', [EmployeesContoller::class, 'delete']);

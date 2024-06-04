@@ -14,16 +14,13 @@ foreach ($xml->person as $person) {
   $rank = $person->rank;
   $phone = $person->phone;
   $room = $person->room;
-  
+
   $stmt->execute(array(
-    ':name' => $name, 
-    ':email' => $email, 
-    ':dept' => $dept, 
-    ':rank' => $rank, 
-    ':phone' => $phone, 
-    ':room' => $room, 
+    ':name' => $name,
+    ':email' => $email,
+    ':dept' => $dept,
+    ':rank' => $rank,
+    ':phone' => $phone,
+    ':room' => $room,
   ));
 }
-
-
-?>
