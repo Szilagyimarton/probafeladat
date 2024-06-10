@@ -57,13 +57,13 @@ class EmployeesContoller extends Controller
                 'phone' => 'required|regex:/^\+36 \(1\) 666-\d{4}$/',
                 'room' => 'nullable'
             ]);
-         
+
             Employee::create($formfields);
             return response()->json(['code' => '200', 'message' => $formfields['name'] . " is added to database!"], 200);
         } catch (ValidationException $e) {
             return response()->json(['code' => '400', 'message' => $e->getMessage()], 400);
         } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'code' => '500'], 500);
+            return response()->json(['message' => 'An unexpected error occurred!', 'code' => '500'], 500);
         }
     }
 
