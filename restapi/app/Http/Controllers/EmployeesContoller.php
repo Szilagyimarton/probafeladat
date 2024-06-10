@@ -17,13 +17,17 @@ class EmployeesContoller extends Controller
             $xmlFilePath = base_path('people.xml');
 
             $xml = simplexml_load_file($xmlFilePath);
+            $user = DB::table('people')->where('email', $xml->person[0]->email)->first();
+            if ($user) {
+                throw new Exception("XML is already added to database!", 400);
+            };
             foreach ($xml->person as $person) {
                 DB::insert('insert into people (name, email, dept, rank, phone, room) values (?, ?, ?, ?, ?, ?)', [$person->name, $person->email, $person->dept, $person->rank, $person->phone, $person->room]);
             }
 
             return response()->json(['message' => "XML is succesfully loaded to database!"]);
         } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'code' => '500']);
+            return response()->json(['message' => $e->getMessage(), 'code' => $e->getCode()]);
         }
     }
 
