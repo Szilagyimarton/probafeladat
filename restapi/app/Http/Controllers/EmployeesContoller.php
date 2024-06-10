@@ -10,6 +10,15 @@ use Illuminate\Validation\ValidationException;
 
 class EmployeesContoller extends Controller
 {
+    public function loadXML(){
+        try{
+            include(app_path('loadxml.php'));
+            return response()->json(['message' => "XML is succesfully loaded to database!" ]);
+        }catch(Exception $e){
+            return response()->json(['message' => $e->getMessage(), 'code' => '500']);
+        }
+    }
+
     public function show($email)
     {
         try {
@@ -33,8 +42,13 @@ class EmployeesContoller extends Controller
                 'rank' => 'required',
                 'phone' => 'required|regex:/^\+36 \(1\) 666-\d{4}$/'
             ]);
+            if($request['room']){
+                $formfields['room'] = $request['room'];
+            }else{
+                $formfields['room'] = "Unknown";
+            }
             Employee::create($formfields);
-            return response()->json(['code' => '200', 'message' => $formfields['name'] . " is added to database!"], 200);
+            return response($formfields);
         } catch (ValidationException $e) {
             return response()->json(['code' => '400', 'message' => $e->getMessage()], 400);
         } catch (Exception $e) {

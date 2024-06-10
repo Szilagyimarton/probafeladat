@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+Route::get('/loadxml',[EmployeesContoller::class, 'loadXML']);
 Route::get('/people/{email}', [EmployeesContoller::class, 'show']);
 Route::post('/people', [EmployeesContoller::class, 'store']);
 Route::delete('/people/{email}', [EmployeesContoller::class, 'delete']);
