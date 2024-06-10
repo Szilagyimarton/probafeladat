@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('dept');
             $table->string('rank');
             $table->string('phone');
-            $table->string('room');
+            $table->string('room')->nullable();
         });
     }
 

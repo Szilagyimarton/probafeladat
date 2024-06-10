@@ -6,15 +6,23 @@ use App\Models\Employee;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class EmployeesContoller extends Controller
 {
-    public function loadXML(){
-        try{
-            include(app_path('loadxml.php'));
-            return response()->json(['message' => "XML is succesfully loaded to database!" ]);
-        }catch(Exception $e){
+    public function loadXML()
+    {
+        try {
+            $xmlFilePath = base_path('people.xml');
+
+            $xml = simplexml_load_file($xmlFilePath);
+            foreach ($xml->person as $person) {
+                DB::insert('insert into people (name, email, dept, rank, phone, room) values (?, ?, ?, ?, ?, ?)', [$person->name, $person->email, $person->dept, $person->rank, $person->phone, $person->room]);
+            }
+
+            return response()->json(['message' => "XML is succesfully loaded to database!"]);
+        } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage(), 'code' => '500']);
         }
     }
@@ -42,9 +50,9 @@ class EmployeesContoller extends Controller
                 'rank' => 'required',
                 'phone' => 'required|regex:/^\+36 \(1\) 666-\d{4}$/'
             ]);
-            if($request['room']){
+            if ($request['room']) {
                 $formfields['room'] = $request['room'];
-            }else{
+            } else {
                 $formfields['room'] = "Unknown";
             }
             Employee::create($formfields);
