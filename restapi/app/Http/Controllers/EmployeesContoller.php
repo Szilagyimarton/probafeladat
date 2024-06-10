@@ -48,7 +48,7 @@ class EmployeesContoller extends Controller
                 $formfields['room'] = "Unknown";
             }
             Employee::create($formfields);
-            return response($formfields);
+            return response()->json(['code' => '200', 'message' => $formfields['name'] . " is added to database!"], 200);
         } catch (ValidationException $e) {
             return response()->json(['code' => '400', 'message' => $e->getMessage()], 400);
         } catch (Exception $e) {
